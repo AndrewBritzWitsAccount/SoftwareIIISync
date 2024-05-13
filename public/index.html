@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="credentials-form">
+        <input type="text" id="username-input" placeholder="Enter your username">
+        <input type="password" id="password-input" placeholder="Enter the password">
+        <button onclick="setUserCredentials()">Set Username & Password</button>
+    </div>
+    <div id="users-list"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        function setUserCredentials() {
+            const username = document.getElementById('username-input').value.trim();
+            const password = document.getElementById('password-input').value.trim();
+            if (username !== '' && password !== '') {
+                socket.emit('setUserCredentials', { username, password });
+                document.getElementById('credentials-form').style.display = 'none';
+            }
+        }
+
+        // Update users list when a new user connects
+        socket.on('userConnected', (users) => {
+            updateUserList(users);
+        });
+
+        // Update users list when a user disconnects
+        socket.on('userDisconnected', (userId) => {
+            delete users[userId];
+            updateUserList(Object.values(users));
+        });
+
+        // Prompt user to enter credentials again if password is incorrect
+        socket.on('incorrectPassword', () => {
+            alert('Incorrect password! Please try again.');
+            document.getElementById('credentials-form').style.display = 'block';
+        });
+
+        // Function to update the users list in the DOM
+        function updateUserList(users) {
+            const userListDiv = document.getElementById('users-list');
+            userListDiv.innerHTML = '';
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.textContent = `User: ${user.username}`;
+                userListDiv.appendChild(userDiv);
+            });
+        }
+    </script>
+</body>
+</html>
