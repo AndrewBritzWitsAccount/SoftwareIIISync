@@ -10,16 +10,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 let users = {};
-
-const PORT = process.env.PORT || 3000;
-
-app.use(express.static(path.join(__dirname, 'public'), {
-    extensions: ['html', 'js']
-}));
-
-app.get('/game', (req, res) => {
-    res.sendFile(path.join(__dirname, 'game.html'));
-});
+let gameStarted = false;
 
 io.on('connection', (socket) => {
     console.log('New user connected:', socket.id);
@@ -33,9 +24,20 @@ io.on('connection', (socket) => {
                 username: username
             };
             io.emit('userConnected', Object.values(users));
+
+            // If the required number of players is reached, and the game hasn't started, wait for "Start Game" button click
+            if (Object.keys(users).length >= 3 && !gameStarted) {
+                io.emit('waitingForStartGame');
+            }
         } else {
             socket.emit('incorrectPassword');
             socket.disconnect(true);
+        }
+    });
+
+    socket.on('startGame', () => {
+        if (!gameStarted) {
+            startGame();
         }
     });
 
@@ -44,6 +46,21 @@ io.on('connection', (socket) => {
         delete users[socket.id];
         io.emit('userDisconnected', socket.id);
     });
+});
+
+function startGame() {
+    gameStarted = true;
+    io.emit('gameStarted');
+}
+
+const PORT = process.env.PORT || 3000;
+
+app.use(express.static(path.join(__dirname, 'public'), {
+    extensions: ['html', 'js']
+}));
+
+app.get('/game', (req, res) => {
+    res.sendFile(path.join(__dirname, 'game.html'));
 });
 
 server.listen(PORT, () => {
