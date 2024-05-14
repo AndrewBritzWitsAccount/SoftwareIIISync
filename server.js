@@ -1,18 +1,23 @@
+// server.js
+
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const path = require('path'); // Import the 'path' module
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const PORT = process.env.PORT || 3000;
-
 // Store connected users with usernames
 let users = {};
 
+const PORT = process.env.PORT || 3000;
+
 // Serve static files
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public'), { // Specify the directory containing static files
+    extensions: ['html', 'js'] // Specify the file extensions to serve
+}));
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
