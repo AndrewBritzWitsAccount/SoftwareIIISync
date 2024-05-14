@@ -1,86 +1,15 @@
+<!-- game.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Broken Picture Phone Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f5f5f5;
-        }
-        .game-container {
-            width: 400px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .game-container h2 {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .game-container label {
-            font-size: 16px;
-            color: #666;
-        }
-        .game-container input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            box-sizing: border-box;
-        }
-        .game-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .game-container button:hover {
-            background-color: #45a049;
-        }
-        .game-container .message {
-            text-align: center;
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-    </style>
+    <title>Game Screen</title>
 </head>
 <body>
-    <div class="game-container">
-        <h2>Enter Your Sentence</h2>
-        <label for="sentence-input">Your Sentence:</label>
-        <input type="text" id="sentence-input" placeholder="Enter your sentence" required>
-        <button onclick="submitSentence()">Submit</button>
-        <p class="message" id="message"></p>
+    <div id="game-screen">
+        <h1>Game Screen</h1>
     </div>
-
-    <script>
-        function submitSentence() {
-            const sentence = document.getElementById('sentence-input').value.trim();
-            if (sentence !== '') {
-                // Emit an event to the server with the submitted sentence
-                socket.emit('submitSentence', sentence);
-                document.getElementById('message').textContent = 'Sentence submitted!';
-                document.getElementById('sentence-input').setAttribute('disabled', 'disabled');
-            } else {
-                document.getElementById('message').textContent = 'Please enter a sentence!';
-            }
-        }
-    </script>
 </body>
 </html>

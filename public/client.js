@@ -21,17 +21,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Update users list when a new user connects
     socket.on('userConnected', function (users) {
         updateUserList(users);
     });
 
-    // Update users list when a user disconnects
-    socket.on('userDisconnected', function (users) {
-        updateUserList(users);
-    });
-
-    // Function to update the users list in the DOM
     function updateUserList(users) {
         const userList = document.getElementById('user-list');
         userList.innerHTML = '';
@@ -41,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
             userList.appendChild(li);
         });
 
-        // Show or hide the user list and start game button based on the number of users
         if (users.length >= 3) {
             userListDiv.style.display = 'block';
             startGameButton.style.display = 'block';
@@ -53,9 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to start the game
+    startGameButton.addEventListener('click', startGame);
     function startGame() {
-        alert('Starting the game!');
-        // Implement game start logic here
+        window.location.href = '/game';
     }
 });
